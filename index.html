@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dogwifgun — The Face of Doge</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;800;900&family=Fredoka:wght@600;700&family=Noto+Sans+SC:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   colors
+═══════════════════════════════════════ */
+:root{
+  --y:   #f7d46e;
+  --yd:  #e0a820;
+  --yl:  #fff4c2;
+  --blk: #18100a;
+  --brn: #3d1f08;
+  --org: #e8820c;
+  --org2:#f4a030;
+  --wht: #fffef5;
+  --red: #d93b1a;
+}
+
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--y);
+  color:var(--blk);
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════ */
+*{cursor:none!important;}
+#cur{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:99999;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--blk);border:2.5px solid var(--y);
+  transform:translate(-50%,-50%);
+  transition:width .14s,height .14s,background .14s;
+  mix-blend-mode:multiply;
+}
+#cur.h{width:38px;height:38px;background:var(--y);border-color:var(--blk);}
+@media(hover:none){#cur{display:none;}}
+
+/* ═══════════════════════════════════════
+   PAW RAIN  
+═══════════════════════════════════════ */
+#paw-rain{
+  position:fixed;inset:0;pointer-events:none;z-index:1;
+  overflow:hidden;
+}
+.paw-drop{
+  position:absolute;top:-100px;
+  animation:pawfall linear infinite;
+  will-change:transform;
+}
+.paw-drop img{
+  width:40px;height:40px;
+  object-fit:contain;
+  display:block;
+}
+@keyframes pawfall{
+  0%  {transform:translateY(0)    rotate(-10deg);opacity:0;}
+  6%  {opacity:1;}
+  92% {opacity:.6;}
+  100%{transform:translateY(115vh) rotate(25deg);opacity:0;}
+}
+
+/* ═══════════════════════════════════════
+   GRAIN
+═══════════════════════════════════════ */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════
+   HATCH PATTERN
+═══════════════════════════════════════ */
+.hatch::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(
+    45deg,transparent,transparent 22px,
+    rgba(26,16,8,.032) 22px,rgba(26,16,8,.032) 23px
+  );
+}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  background:var(--blk);
+  border-bottom:3px solid var(--y);
+  transition:box-shadow .3s;
+}
+#nav.scrolled{box-shadow:0 4px 28px rgba(0,0,0,.55);}
+
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo img{width:36px;height:36px;border-radius:50%;border:2px solid var(--y);object-fit:cover;flex-shrink:0;}
+.nav-logo-text{
+  font-family:'Boogaloo',cursive;font-size:1.85rem;
+  color:var(--y);letter-spacing:3px;
+  /* crisp orange shadow — black bg so orange pops */
+  text-shadow:2px 2px 0 var(--org);
+}
+
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none;}
+.nav-links a{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:.75rem;color:rgba(247,212,110,.6);
+  text-decoration:none;padding:7px 12px;border-radius:8px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  transition:color .2s,background .2s;
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--y);background:rgba(247,212,110,.1);
+}
+.nav-cta{
+  background:var(--y)!important;color:var(--blk)!important;
+  font-weight:900!important;border-radius:10px!important;
+  padding:9px 18px!important;
+  box-shadow:3px 3px 0 var(--yd)!important;
+}
+.nav-cta:hover{
+  transform:translate(-2px,-2px)!important;
+  box-shadow:5px 5px 0 var(--yd)!important;
+}
+
+/* HAMBURGER */
+.nav-burger{
+  display:none;
+  flex-direction:column;gap:5px;
+  background:none;border:none;padding:8px;
+  cursor:pointer!important;
+}
+.nav-burger span{
+  display:block;width:24px;height:2.5px;
+  background:var(--y);border-radius:2px;
+  transition:transform .3s,opacity .3s;
+}
+.nav-burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
+.nav-burger.open span:nth-child(2){opacity:0;}
+.nav-burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
+
+/* MOBILE MENU OVERLAY */
+#mobile-menu{
+  display:none;
+  position:fixed;inset:0;top:64px;z-index:999;
+  background:var(--blk);
+  padding:32px 28px;
+  flex-direction:column;gap:6px;
+  border-top:3px solid var(--y);
+}
+#mobile-menu.open{display:flex;}
+#mobile-menu a{
+  font-family:'Boogaloo',cursive;font-size:1.7rem;
+  color:rgba(247,212,110,.7);text-decoration:none;
+  letter-spacing:2px;padding:12px 0;
+  border-bottom:1px solid rgba(247,212,110,.08);
+  transition:color .2s;
+}
+#mobile-menu a:hover{color:var(--y);}
+#mobile-menu .mm-cta{
+  margin-top:16px;
+  background:var(--y);color:var(--blk)!important;
+  border-radius:12px;padding:14px 24px!important;
+  text-align:center;border-bottom:none;
+  box-shadow:4px 4px 0 var(--yd);font-size:1.4rem;
+}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:100px 60px 70px;
+  position:relative;overflow:hidden;
+  background:var(--y);
+}
+/* diagonal stripe */
+#hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(
+    -45deg,transparent,transparent 26px,
+    rgba(26,16,8,.03) 26px,rgba(26,16,8,.03) 27px
+  );
+}
+
+.hero-wrap{
+  max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+  position:relative;z-index:2;
+}
+
+.hero-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blk);padding:6px 16px 6px 10px;
+  border-radius:30px;margin-bottom:24px;
+  border:2px solid rgba(247,212,110,.25);
+}
+.hero-dot{
+  width:8px;height:8px;background:#2fd370;border-radius:50%;
+  animation:blink 1.6s ease-in-out infinite;
+  box-shadow:0 0 8px #2fd370;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-pill-txt{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:.72rem;color:var(--y);letter-spacing:2px;text-transform:uppercase;
+}
+
+/* ─ TITLE  ─ */
+.hero-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(6rem,14vw,11rem);
+  line-height:.88;
+  letter-spacing:4px;
+  margin-bottom:22px;
+  color:var(--blk);
+  text-shadow:
+    4px  4px 0 var(--org),
+    8px  8px 0 rgba(26,16,8,.18);
+}
+
+.hero-sub{
+  font-family:'Nunito',sans-serif;
+  font-size:1rem;font-weight:700;
+  color:var(--brn);
+  max-width:400px;line-height:1.8;
+  margin-bottom:28px;
+}
+.hero-sub strong{color:var(--blk);}
+
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
+.htag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--blk);color:var(--y);
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:7px 13px;border-radius:8px;
+  border:1.5px solid rgba(247,212,110,.12);
+}
+
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-dark{
+  font-family:'Boogaloo',cursive;font-size:1.3rem;letter-spacing:2px;
+  padding:14px 34px;border-radius:14px;
+  background:var(--blk);color:var(--y);
+  text-decoration:none;display:inline-block;
+  box-shadow:5px 5px 0 var(--org);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-dark:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--org);}
+.btn-outline{
+  font-family:'Boogaloo',cursive;font-size:1.3rem;letter-spacing:2px;
+  padding:13px 32px;border-radius:14px;
+  background:transparent;color:var(--blk);
+  text-decoration:none;display:inline-block;
+  border:3px solid var(--blk);
+  box-shadow:5px 5px 0 rgba(26,16,8,.16);
+  transition:transform .15s,box-shadow .15s,background .15s;
+}
+.btn-outline:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 rgba(26,16,8,.2);background:var(--yl);}
+
+/* hero dog */
+.hero-right{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.dog-stage{position:relative;width:440px;height:440px;}
+
+.dog-blob{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-56%);
+  width:310px;height:310px;
+  background:var(--yl);
+  border-radius:60% 40% 52% 48% / 48% 55% 45% 52%;
+  border:7px solid var(--blk);
+  box-shadow:8px 8px 0 var(--blk);
+  overflow:hidden;
+  animation:dogFloat 3.2s ease-in-out infinite;
+}
+@keyframes dogFloat{
+  0%,100%{transform:translate(-50%,-56%) translateY(0) rotate(-.8deg);}
+  50%     {transform:translate(-50%,-56%) translateY(-15px) rotate(.8deg);}
+}
+.dog-blob img{width:100%;height:100%;object-fit:cover;display:block;}
+.dog-blob-fb{width:100%;height:100%;display:none;align-items:center;justify-content:center;}
+.dog-shadow{
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:240px;height:26px;
+  background:radial-gradient(ellipse,rgba(26,16,8,.2) 0%,transparent 70%);
+  border-radius:50%;
+  animation:shadowP 3.2s ease-in-out infinite;
+}
+@keyframes shadowP{0%,100%{transform:translateX(-50%) scaleX(1)}50%{transform:translateX(-50%) scaleX(.82)}}
+
+.chip{
+  position:absolute;
+  background:var(--blk);color:var(--y);
+  border:2.5px solid var(--y);border-radius:10px;
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:7px 13px;white-space:nowrap;
+  box-shadow:4px 4px 0 var(--org);
+}
+.c1{top:36px;right:22px;animation:chipF 3s ease-in-out infinite;}
+.c2{bottom:96px;left:-6px;animation:chipF 3s ease-in-out 1.1s infinite;}
+.c3{bottom:30px;right:44px;animation:chipF 3s ease-in-out 2s infinite;}
+@keyframes chipF{
+  0%,100%{transform:translateY(0) rotate(-.8deg);}
+  50%     {transform:translateY(-8px) rotate(.8deg);}
+}
+
+.dstar{position:absolute;animation:dstarA 3.5s ease-in-out infinite;}
+@keyframes dstarA{0%,100%{transform:scale(1)}50%{transform:scale(1.2) rotate(12deg)}}
+
+/* ═══════════════════════════════════════
+   TICKER
+═══════════════════════════════════════ */
+.ticker{
+  overflow:hidden;background:var(--blk);
+  border-top:3px solid var(--y);border-bottom:3px solid var(--y);
+  padding:12px 0;white-space:nowrap;
+}
+.ticker-track{display:inline-block;animation:tickA 26s linear infinite;}
+@keyframes tickA{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-item{
+  display:inline-flex;align-items:center;gap:10px;margin-right:40px;
+  font-family:'Boogaloo',cursive;font-size:1.05rem;letter-spacing:2.5px;color:var(--y);
+}
+.tick-dot{width:7px;height:7px;background:var(--org2);border-radius:50%;display:inline-block;flex-shrink:0;}
+
+/* ═══════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════ */
+#about{background:var(--blk);position:relative;overflow:hidden;}
+
+.about-ghost{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Boogaloo',cursive;font-size:28vw;
+  color:rgba(247,212,110,.025);pointer-events:none;
+  white-space:nowrap;user-select:none;letter-spacing:-4px;
+}
+
+/* header block */
+.about-head{
+  padding:80px 60px 40px;
+  max-width:1200px;margin:0 auto;
+  position:relative;z-index:2;
+}
+.eyebrow{
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.68rem;letter-spacing:4px;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+  color:rgba(247,212,110,.45);
+  margin-bottom:14px;
+}
+.eyebrow::before{content:'';width:22px;height:2px;background:currentColor;border-radius:2px;}
+
+/* ─ ABOUT TITLE  ─ */
+.about-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(3.8rem,9vw,7.5rem);
+  line-height:.92;letter-spacing:2px;
+  color:var(--y);
+  text-shadow:5px 5px 0 var(--org);
+}
+.about-title .line2{
+  display:block;
+  padding-left:clamp(10px,3vw,40px);
+  -webkit-text-stroke:3px var(--y);
+  color:transparent;
+  text-shadow:none;
+}
+
+.about-intro{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:50px;align-items:start;
+  padding:0 60px 40px;
+  max-width:1200px;margin:0 auto;
+  position:relative;z-index:2;
+}
+.about-intro-col{
+  font-family:'Nunito',sans-serif;font-weight:700;
+  font-size:1rem;
+  color:rgba(255,254,245,.8);
+  line-height:1.88;
+}
+.about-intro-col strong{color:var(--y);}
+.about-intro-col .big-stmt{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(1.3rem,2.5vw,1.8rem);
+  color:var(--y);letter-spacing:1px;
+  line-height:1.2;
+  display:block;margin-top:18px;
+}
+
+.about-quote{
+  max-width:1200px;margin:0 auto;
+  padding:0 60px 40px;
+  position:relative;z-index:2;
+}
+.quote-inner{
+  background:rgba(247,212,110,.06);
+  border-left:5px solid var(--y);
+  border-radius:0 16px 16px 0;
+  padding:26px 34px;
+}
+.quote-inner p{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(1.4rem,3vw,2.2rem);
+  color:var(--y);letter-spacing:1px;line-height:1.25;
+}
+
+/* 3 cards */
+.about-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  max-width:1200px;margin:0 auto;
+  padding:0 60px 40px;
+  position:relative;z-index:2;
+}
+.about-card{
+  background:rgba(247,212,110,.05);
+  border:1.5px solid rgba(247,212,110,.1);
+  border-radius:18px;padding:26px 22px;
+  transition:border-color .25s,background .25s,transform .2s;
+}
+.about-card:hover{border-color:rgba(247,212,110,.28);background:rgba(247,212,110,.08);transform:translateY(-4px);}
+.about-card-num{
+  font-family:'Boogaloo',cursive;font-size:3.5rem;
+  color:rgba(247,212,110,.1);line-height:1;margin-bottom:6px;letter-spacing:2px;
+}
+.about-card h4{
+  font-family:'Boogaloo',cursive;font-size:1.25rem;
+  color:var(--y);letter-spacing:1.5px;margin-bottom:9px;
+}
+.about-card p{
+  font-size:.9rem;font-weight:700;
+  color:rgba(255,254,245,.7);line-height:1.7;
+}
+
+/* wow + nasdaq row */
+.about-bottom{
+  max-width:1200px;margin:0 auto;
+  padding:24px 60px 80px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:40px;flex-wrap:wrap;
+  position:relative;z-index:2;
+  border-top:1px solid rgba(247,212,110,.08);
+}
+.wow-block{}
+.wow-txt{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(1.8rem,4.5vw,3.5rem);
+  color:var(--org2);letter-spacing:3px;line-height:1.15;
+  display:block;margin-bottom:24px;
+}
+.narr-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--y);color:var(--blk);
+  font-family:'Boogaloo',cursive;font-size:1.1rem;letter-spacing:2px;
+  padding:12px 26px;border-radius:12px;
+  text-decoration:none;
+  box-shadow:4px 4px 0 var(--org);
+  transition:transform .15s,box-shadow .15s;
+}
+.narr-btn:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--org);}
+
+/* NASDAQ — bigger card */
+.nasdaq-link{
+  display:block;text-decoration:none;
+  border-radius:18px;
+  background:rgba(247,212,110,.05);
+  border:2px solid rgba(247,212,110,.12);
+  padding:14px;
+  width:clamp(220px,22vw,300px);
+  flex-shrink:0;
+  transition:border-color .25s,transform .2s,box-shadow .2s;
+}
+.nasdaq-link:hover{
+  border-color:var(--y);
+  transform:translate(-4px,-4px) rotate(-1deg);
+  box-shadow:8px 8px 0 var(--org);
+}
+.nasdaq-img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;
+  border-radius:12px;display:block;background:#241208;
+}
+.nasdaq-ph{
+  width:100%;aspect-ratio:4/5;border-radius:12px;
+  background:#241208;
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+}
+.nasdaq-ph-txt{font-family:'Boogaloo',cursive;font-size:.95rem;color:rgba(247,212,110,.3);letter-spacing:1.5px;text-align:center;padding:0 10px;}
+.nasdaq-chip{
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.66rem;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(247,212,110,.45);margin-top:10px;text-align:center;
+  display:block;
+}
+
+/* ═══════════════════════════════════════
+   TOKENOMICS
+═══════════════════════════════════════ */
+#tokenomics{
+  background:var(--y);padding:100px 60px;
+  position:relative;overflow:hidden;
+}
+
+.toki-wrap{max-width:1100px;margin:0 auto;position:relative;z-index:2;}
+.toki-eyebrow{color:rgba(26,16,8,.45);}
+.toki-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(3.5rem,8vw,6rem);
+  color:var(--blk);letter-spacing:2px;line-height:.9;
+  text-shadow:4px 4px 0 rgba(26,16,8,.15);
+  margin-bottom:36px;
+}
+
+/* CA box */
+.ca-wrap{
+  background:var(--blk);border-radius:16px;
+  padding:18px 22px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  box-shadow:6px 6px 0 var(--org);
+  margin-bottom:32px;
+}
+.ca-left{flex:1;min-width:0;}
+.ca-lbl{
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.63rem;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(247,212,110,.35);display:block;margin-bottom:4px;
+}
+.ca-val{
+  font-family:'Nunito',monospace;font-weight:800;
+  font-size:clamp(.6rem,1.15vw,.82rem);
+  color:var(--y);word-break:break-all;letter-spacing:.3px;
+  display:block;
+}
+.ca-actions{display:flex;gap:10px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.ca-copy{
+  background:var(--y);color:var(--blk);
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.76rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:10px 18px;border-radius:10px;
+  border:2.5px solid var(--yd);
+  box-shadow:3px 3px 0 var(--yd);
+  cursor:pointer!important;
+  transition:transform .15s,box-shadow .15s;
+}
+.ca-copy:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--yd);}
+.ca-view{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:.72rem;letter-spacing:1.2px;text-transform:uppercase;
+  color:rgba(247,212,110,.5);text-decoration:none;
+  white-space:nowrap;transition:color .2s;
+}
+.ca-view:hover{color:var(--y);}
+
+/* ─ GRID: 3 equal + 1 full ─ */
+.toki-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.tk{
+  background:var(--blk);border-radius:18px;
+  padding:32px 26px;
+  box-shadow:5px 5px 0 rgba(26,16,8,.18);
+  transition:transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+  min-width:0;
+}
+.tk:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 rgba(26,16,8,.2);}
+
+.tk-icon{
+  width:42px;height:42px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid rgba(247,212,110,.14);
+  margin-bottom:18px;flex-shrink:0;
+}
+.tk-num{
+  font-family:'Boogaloo',cursive;
+  font-size:3.2rem;color:var(--y);
+  letter-spacing:1px;line-height:1;
+  margin-bottom:5px;display:block;
+  text-shadow:2px 2px 0 rgba(0,0,0,.55);
+}
+.tk-lbl{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:.66rem;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(247,212,110,.38);display:block;
+}
+
+/* yellow highlight card */
+.tk.hi{background:var(--y);}
+.tk.hi .tk-num{color:var(--blk);text-shadow:2px 2px 0 rgba(26,16,8,.2);}
+.tk.hi .tk-lbl{color:rgba(26,16,8,.45);}
+.tk.hi .tk-icon{border-color:rgba(26,16,8,.12);}
+
+/* full-width stat bar */
+.tk.full{
+  grid-column:1/-1;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  gap:20px;padding:26px 32px;
+  flex-wrap:wrap;/* allow wrap on small screens */
+}
+.tk.full .tk-num{font-size:2.4rem;margin-bottom:0;}
+.tk-stats{display:flex;}
+.tk-stat{
+  text-align:center;
+  padding:0 26px;
+  border-right:1px solid rgba(247,212,110,.1);
+}
+.tk-stat:last-child{border-right:none;}
+.tk-stat .tk-num{font-size:1.8rem;}
+
+/* ═══════════════════════════════════════
+   HOW TO BUY
+═══════════════════════════════════════ */
+#howtobuy{background:var(--blk);padding:100px 60px;position:relative;overflow:hidden;}
+.htb-eyebrow{color:rgba(247,212,110,.45);}
+.htb-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(3.5rem,8vw,6rem);
+  color:var(--y);letter-spacing:2px;line-height:.9;
+  text-shadow:4px 4px 0 var(--org);
+  margin-bottom:52px;
+}
+.htb-grid{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+.htb-step{
+  background:rgba(247,212,110,.05);
+  border:2px solid rgba(247,212,110,.1);
+  border-radius:18px;padding:28px 18px 24px;
+  text-align:center;
+  transition:border-color .25s,background .25s,transform .25s,box-shadow .25s;
+}
+.htb-step:hover{
+  border-color:rgba(247,212,110,.3);background:rgba(247,212,110,.08);
+  transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,.3);
+}
+.htb-num{
+  width:28px;height:28px;
+  background:var(--y);color:var(--blk);
+  font-family:'Boogaloo',cursive;font-size:.95rem;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:2.5px solid var(--blk);
+  box-shadow:2px 2px 0 var(--org);
+  margin:0 auto 16px;
+}
+.htb-img{
+  width:68px;height:68px;object-fit:contain;
+  display:block;margin:0 auto 16px;
+  border-radius:16px;
+  background:rgba(247,212,110,.07);
+  border:2px solid rgba(247,212,110,.12);
+  padding:9px;
+}
+.htb-step h3{
+  font-family:'Boogaloo',cursive;font-size:1.25rem;
+  color:var(--y);letter-spacing:1.5px;margin-bottom:8px;
+}
+.htb-step p{
+  font-size:.84rem;font-weight:700;
+  color:rgba(255,254,245,.65);line-height:1.65;
+}
+.htb-step a{color:rgba(247,212,110,.8);}
+
+/* ═══════════════════════════════════════
+   CHART
+═══════════════════════════════════════ */
+#chart{background:var(--y);padding:100px 60px;position:relative;overflow:hidden;}
+.chart-wrap{max-width:1100px;margin:0 auto;position:relative;z-index:2;}
+.chart-eyebrow{color:rgba(26,16,8,.45);}
+.chart-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(3.5rem,8vw,6rem);
+  color:var(--blk);letter-spacing:2px;line-height:.9;
+  text-shadow:4px 4px 0 rgba(26,16,8,.14);
+  margin-bottom:40px;
+}
+
+/* DEX panel — full width */
+.dex-panel{
+  background:var(--blk);border-radius:20px;
+  border:4px solid var(--blk);
+  overflow:hidden;
+  box-shadow:8px 8px 0 rgba(26,16,8,.2);
+  margin-bottom:24px;
+}
+.dex-top{
+  background:var(--y);padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.dex-top-name{font-family:'Boogaloo',cursive;font-size:1.2rem;letter-spacing:2px;color:var(--blk);}
+.dex-top-link{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.7rem;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blk);text-decoration:none;
+  display:flex;align-items:center;gap:5px;opacity:.55;
+  transition:opacity .2s;
+}
+.dex-top-link:hover{opacity:1;}
+#dex-frame{width:100%;height:500px;border:none;display:block;}
+
+/* Uniswap row */
+.uni-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:24px;align-items:start;
+}
+.uni-info{padding:8px 0;}
+.uni-info h3{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(2.2rem,4vw,3rem);
+  color:var(--blk);letter-spacing:1.5px;line-height:1;
+  text-shadow:3px 3px 0 rgba(26,16,8,.14);
+  margin-bottom:14px;
+}
+.uni-info p{
+  font-size:.9rem;font-weight:700;
+  color:var(--brn);line-height:1.7;margin-bottom:16px;
+}
+
+/* inline copyable CA inside uniswap section */
+.uni-ca{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--blk);
+  border-radius:12px;padding:12px 16px;
+  margin-bottom:20px;
+}
+.uni-ca-val{
+  font-family:'Nunito',monospace;font-weight:800;
+  font-size:clamp(.55rem,1.1vw,.76rem);
+  color:var(--y);word-break:break-all;flex:1;min-width:0;
+}
+.uni-ca-copy{
+  flex-shrink:0;
+  background:var(--y);color:var(--blk);
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.7rem;letter-spacing:1.2px;text-transform:uppercase;
+  padding:7px 14px;border-radius:8px;
+  border:2px solid var(--yd);cursor:pointer!important;
+  box-shadow:2px 2px 0 var(--yd);
+  transition:transform .14s,box-shadow .14s;
+}
+.uni-ca-copy:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--yd);}
+
+.uni-frame-wrap{
+  background:var(--blk);
+  border-radius:20px;border:4px solid var(--blk);
+  overflow:hidden;
+  box-shadow:8px 8px 0 rgba(26,16,8,.2);
+}
+.uni-frame-wrap iframe{width:100%;height:660px;border:none;display:block;}
+
+/* ═══════════════════════════════════════
+   MEMES
+═══════════════════════════════════════ */
+#memes{background:var(--blk);padding:100px 60px;}
+.memes-wrap{max-width:980px;margin:0 auto;}
+.memes-eyebrow{color:rgba(247,212,110,.45);}
+.memes-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(3.5rem,8vw,6rem);
+  color:var(--y);letter-spacing:2px;line-height:.9;
+  text-shadow:4px 4px 0 var(--org);
+  margin-bottom:40px;
+}
+.memes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.meme-card{
+  aspect-ratio:1/1;border-radius:18px;
+  border:5px solid var(--y);overflow:hidden;
+  box-shadow:7px 7px 0 var(--org);
+  transition:transform .22s,box-shadow .22s;
+  background:#1a1008;
+}
+.meme-card:hover{transform:translate(-5px,-5px) rotate(-1.5deg);box-shadow:12px 12px 0 var(--org);z-index:5;}
+.meme-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.meme-ph{
+  width:100%;height:100%;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+}
+.meme-ph span{font-family:'Boogaloo',cursive;font-size:1rem;color:rgba(247,212,110,.25);letter-spacing:2px;}
+
+/* ═══════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════ */
+#contact{background:var(--y);padding:100px 60px;position:relative;overflow:hidden;}
+.contact-wrap{max-width:880px;margin:0 auto;text-align:center;position:relative;z-index:2;}
+.contact-eyebrow{color:rgba(26,16,8,.4);justify-content:center;}
+.contact-eyebrow::before{display:none;}
+.contact-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(4rem,9vw,6.5rem);
+  color:var(--blk);letter-spacing:3px;line-height:.9;
+  text-shadow:5px 5px 0 rgba(26,16,8,.14);
+  margin-bottom:12px;
+}
+.contact-sub{
+  font-size:.97rem;font-weight:700;
+  color:var(--brn);margin-bottom:44px;
+}
+.soc-row{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-bottom:24px;}
+.soc-card{
+  background:var(--blk);color:var(--y);
+  border:3.5px solid var(--blk);border-radius:16px;
+  padding:22px 24px;min-width:140px;
+  text-decoration:none;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  box-shadow:5px 5px 0 rgba(26,16,8,.2);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.soc-card:hover{transform:translate(-4px,-4px) rotate(-1deg);box-shadow:9px 9px 0 var(--org);border-color:var(--y);}
+.soc-ico{
+  width:40px;height:40px;
+  background:rgba(247,212,110,.07);
+  border:1.5px solid rgba(247,212,110,.12);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+}
+.soc-name{font-family:'Boogaloo',cursive;font-size:.95rem;letter-spacing:2px;}
+.soc-hdl{font-family:'Nunito',sans-serif;font-weight:700;font-size:.67rem;color:rgba(247,212,110,.32);letter-spacing:1px;text-transform:uppercase;}
+.contact-wow{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(2.5rem,6vw,5rem);
+  color:var(--blk);letter-spacing:8px;
+  opacity:.08;user-select:none;margin-top:28px;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  background:var(--blk);border-top:3px solid var(--y);
+  padding:44px 60px 30px;
+}
+.foot-top{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:22px;
+  padding-bottom:22px;
+  border-bottom:1px solid rgba(247,212,110,.08);
+  margin-bottom:22px;
+}
+.foot-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.foot-logo img{width:36px;height:36px;border-radius:50%;border:2px solid var(--y);object-fit:cover;}
+.foot-logo span{font-family:'Boogaloo',cursive;font-size:1.75rem;color:var(--y);letter-spacing:3px;text-shadow:2px 2px 0 var(--org);}
+.foot-links{display:flex;gap:2px;flex-wrap:wrap;}
+.foot-links a{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;
+  color:rgba(247,212,110,.35);text-decoration:none;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 11px;border-radius:7px;transition:all .2s;
+}
+.foot-links a:hover{color:var(--y);background:rgba(247,212,110,.06);}
+.foot-bot{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap;}
+.foot-ca{
+  font-family:'Nunito',monospace;font-weight:700;font-size:.68rem;
+  color:rgba(247,212,110,.18);word-break:break-all;max-width:430px;margin-bottom:6px;
+}
+.foot-disc{font-family:'Nunito',sans-serif;font-weight:600;font-size:.69rem;color:rgba(247,212,110,.15);line-height:1.65;max-width:520px;}
+.foot-copy{font-family:'Nunito',sans-serif;font-weight:700;font-size:.69rem;color:rgba(247,212,110,.2);letter-spacing:1.5px;text-transform:uppercase;text-align:right;white-space:nowrap;}
+
+/* ═══════════════════════════════════════
+   LANGUAGE TOGGLE
+═══════════════════════════════════════ */
+.lang-toggle{
+  display:flex;align-items:center;gap:0;
+  background:rgba(247,212,110,.1);
+  border:1.5px solid rgba(247,212,110,.2);
+  border-radius:8px;
+  overflow:hidden;
+  flex-shrink:0;
+  margin-left:6px;
+}
+.lang-btn{
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:.68rem;letter-spacing:2px;text-transform:uppercase;
+  padding:6px 11px;
+  background:none;border:none;
+  color:rgba(247,212,110,.45);
+  cursor:pointer!important;
+  transition:background .2s,color .2s;
+  line-height:1;
+}
+.lang-btn.active{
+  background:var(--y);
+  color:var(--blk);
+}
+.lang-btn:not(.active):hover{
+  color:var(--y);
+  background:rgba(247,212,110,.08);
+}
+
+/* Chinese body font override */
+body.lang-cn{
+  font-family:'Noto Sans SC',sans-serif;
+}
+body.lang-cn .about-intro-col,
+body.lang-cn .htb-step p,
+body.lang-cn .uni-info p,
+body.lang-cn .about-card p,
+body.lang-cn .hero-sub,
+body.lang-cn .contact-sub,
+body.lang-cn .foot-disc{
+  font-family:'Noto Sans SC',sans-serif;
+  font-weight:700;
+  line-height:1.9;
+}
+/* Chinese big statements use Noto too (Boogaloo has no CJK) */
+body.lang-cn .about-intro-col .big-stmt,
+body.lang-cn .wow-txt,
+body.lang-cn .quote-inner p,
+body.lang-cn .about-card h4,
+body.lang-cn .htb-step h3,
+body.lang-cn .uni-info h3{
+  font-family:'Noto Sans SC',sans-serif;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(90px);
+  background:var(--y);color:var(--blk);
+  font-family:'Boogaloo',cursive;font-size:1rem;letter-spacing:3px;
+  padding:12px 26px;border-radius:11px;
+  border:3px solid var(--blk);box-shadow:5px 5px 0 var(--org);
+  z-index:99998;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════════════════════
+   REVEAL
+═══════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+
+/* ── tablet 1024px ── */
+@media(max-width:1024px){
+  #hero{padding:90px 40px 60px;}
+  .hero-wrap{grid-template-columns:1fr;gap:48px;text-align:center;}
+  .hero-left{display:flex;flex-direction:column;align-items:center;}
+  .hero-sub{text-align:center;}
+  .hero-right{justify-content:center;}
+  .dog-stage{width:340px;height:340px;}
+  .dog-blob{width:240px;height:240px;}
+
+  .about-intro{grid-template-columns:1fr;}
+  .about-cards{grid-template-columns:1fr 1fr;}
+
+  .toki-grid{grid-template-columns:1fr 1fr;}
+  .tk.full{grid-column:1/-1;}
+  .tk-stats{flex-wrap:wrap;gap:0;}
+  .tk-stat{padding:10px 18px;}
+
+  .htb-grid{grid-template-columns:1fr 1fr;}
+  .uni-row{grid-template-columns:1fr;}
+  .uni-frame-wrap iframe{height:560px;}
+
+  .memes-grid{grid-template-columns:1fr 1fr;max-width:600px;margin:0 auto;}
+
+  .about-bottom{gap:28px;}
+}
+
+/* ── mobile 768px ── */
+@media(max-width:768px){
+  #nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-burger{display:flex;}
+
+  #hero,
+  .about-head,.about-intro,.about-quote,.about-cards,.about-bottom,
+  #tokenomics,.toki-wrap,
+  #howtobuy,.htb-wrap,.htb-grid,
+  #chart,.chart-wrap,
+  #memes,.memes-wrap,
+  #contact,.contact-wrap,
+  footer{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  /* hero */
+  #hero{padding-top:90px;padding-bottom:50px;}
+  .hero-title{font-size:clamp(4.5rem,20vw,7rem);}
+  .hero-btns{justify-content:center;}
+
+  /* about */
+  .about-head{padding-top:60px;padding-bottom:30px;}
+  .about-title{font-size:clamp(3rem,14vw,5rem);}
+  .about-intro{gap:28px;padding-bottom:28px;}
+  .about-quote{padding-bottom:28px;}
+  .about-cards{grid-template-columns:1fr;padding-bottom:28px;}
+  .about-bottom{flex-direction:column;align-items:flex-start;padding-bottom:60px;}
+  .nasdaq-link{width:100%;max-width:340px;}
+  .nasdaq-img{aspect-ratio:4/5;}
+
+  /* toki */
+  #tokenomics{padding-top:70px;padding-bottom:70px;}
+  .toki-grid{grid-template-columns:1fr;}
+  .tk.full{
+    grid-column:span 1;
+    flex-direction:column;align-items:flex-start;
+  }
+  .tk-stats{flex-direction:column;gap:0;width:100%;}
+  .tk-stat{
+    border-right:none;
+    border-bottom:1px solid rgba(247,212,110,.1);
+    padding:10px 0;text-align:left;width:100%;
+  }
+  .tk-stat:last-child{border-bottom:none;}
+
+  /* htb */
+  #howtobuy{padding-top:70px;padding-bottom:70px;}
+  .htb-grid{grid-template-columns:1fr;}
+  .htb-title{margin-bottom:36px;}
+
+  /* chart */
+  #chart{padding-top:70px;padding-bottom:70px;}
+  #dex-frame{height:380px;}
+  .uni-frame-wrap iframe{height:520px;}
+
+  /* memes */
+  #memes{padding-top:70px;padding-bottom:70px;}
+  .memes-grid{grid-template-columns:1fr;max-width:300px;margin:0 auto;}
+
+  /* contact */
+  #contact{padding-top:70px;padding-bottom:70px;}
+  .soc-row{gap:10px;}
+  .soc-card{min-width:calc(50% - 5px);padding:18px 14px;}
+
+  /* footer */
+  footer{padding:36px 20px 24px;}
+  .foot-top{flex-direction:column;align-items:flex-start;}
+  .foot-bot{flex-direction:column;}
+  .foot-copy{text-align:left;}
+}
+
+/* ── small 480px ── */
+@media(max-width:480px){
+  .hero-tags{justify-content:center;}
+  .about-cards{grid-template-columns:1fr;}
+  .soc-card{min-width:130px;}
+  .ca-actions{width:100%;}
+  .ca-copy{width:100%;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="paw-rain"></div>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    <img src="logo.png" alt="Kimchi" onerror="this.style.display='none'">
+    <span class="nav-logo-text">Dogwifgun</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about"       data-en="About"       data-cn="关于">About</a></li>
+    <li><a href="#tokenomics"  data-en="Tokenomics"  data-cn="代币经济">Tokenomics</a></li>
+    <li><a href="#howtobuy"    data-en="How to Buy"  data-cn="如何购买">How to Buy</a></li>
+    <li><a href="#chart"       data-en="Chart"       data-cn="图表">Chart</a></li>
+    <li><a href="#memes"       data-en="Memes"       data-cn="表情包">Memes</a></li>
+    <li><a href="#contact"     data-en="Community"   data-cn="社区">Community</a></li>
+    <li><a href="https://app.uniswap.org/swap?outputCurrency=0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc&chain=ethereum" target="_blank" class="nav-cta" data-en="Buy $Dogwifgun" data-cn="购买 $Dogwifgun">Buy $Dogwifgun</a></li>
+  </ul>
+  <div class="lang-toggle" id="langToggle">
+    <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+    <button class="lang-btn"        id="btnCN" onclick="setLang('cn')">中文</button>
+  </div>
+  <button class="nav-burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu">
+  <a href="#about"       onclick="closeMenu()" data-en="About"       data-cn="关于">About</a>
+  <a href="#tokenomics"  onclick="closeMenu()" data-en="Tokenomics"  data-cn="代币经济">Tokenomics</a>
+  <a href="#howtobuy"    onclick="closeMenu()" data-en="How to Buy"  data-cn="如何购买">How to Buy</a>
+  <a href="#chart"       onclick="closeMenu()" data-en="Chart"       data-cn="图表">Chart</a>
+  <a href="#memes"       onclick="closeMenu()" data-en="Memes"       data-cn="表情包">Memes</a>
+  <a href="#contact"     onclick="closeMenu()" data-en="Community"   data-cn="社区">Community</a>
+  <a href="https://app.uniswap.org/swap?outputCurrency=0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc&chain=ethereum" target="_blank" class="mm-cta" data-en="Buy $Dogwifgun" data-cn="购买 $Dogwifgun">Buy $Dogwifgun</a>
+</div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section id="hero">
+  <div class="hero-wrap">
+
+    <!-- LEFT -->
+    <div class="hero-left reveal">
+      <div class="hero-pill">
+        <span class="hero-dot"></span>
+        <span class="hero-pill-txt" data-en="Live on Ethereum Mainnet" data-cn="已上线以太坊主网">Live on Ethereum Mainnet</span>
+      </div>
+
+      <h1 class="hero-title">Dogwifgun</h1>
+
+      <p class="hero-sub" data-en="Nebraska woman hospitalized after a dog in another vehicle accidentally fired a shotgun at her." data-cn="由 Doge 社区选出的柴犬，代表新时代。不是在实验室诞生的 —— 她是被<strong>选中</strong>的。社区第一，文化永存。">Nebraska woman hospitalized after a dog in another vehicle accidentally fired a shotgun at her.</p>
+
+      <div class="hero-tags">
+        <span class="htag">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 6l2 2 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-en="Contract Renounced" data-cn="合约已放弃">Contract Renounced</span>
+        </span>
+        <span class="htag">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1C6 1 2 4 2 7.5a4 4 0 008 0C10 4 6 1 6 1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" fill="none"/></svg>
+          <span data-en="LP Burnt" data-cn="流动性已销毁">LP Burnt</span>
+        </span>
+        <span class="htag">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="2" y="5.5" width="8" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M4 5.5V4a2 2 0 014 0v1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span data-en="0% Tax" data-cn="0% 税率">0% Tax</span>
+        </span>
+        <span class="htag">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.2 3.7H11L7.9 6.9l1.2 3.7L6 8.5 2.9 10.6l1.2-3.7L1 4.7h3.8z" fill="currentColor"/></svg>
+          <span data-en="Doge Official Dog" data-cn="Doge 官方犬">Doge Official Dog</span>
+        </span>
+      </div>
+
+      <div class="hero-btns">
+        <a href="https://app.uniswap.org/swap?outputCurrency=0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc&chain=ethereum" target="_blank" class="btn-dark" data-en="Buy $Dogwifgun" data-cn="购买 $Dogwifgun">Buy $Dogwifgun</a>
+        <a href="https://dexscreener.com/ethereum/0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc" target="_blank" class="btn-outline" data-en="View Chart" data-cn="查看图表">View Chart</a>
+      </div>
+    </div>
+
+    <!-- RIGHT — dog -->
+    <div class="hero-right reveal" style="transition-delay:.1s">
+      <div class="dog-stage">
+        <div class="dstar" style="top:20px;right:64px;animation-delay:0s">
+          <svg width="30" height="30" viewBox="0 0 30 30"><path d="M15 2l2.4 7.2H22l-5.8 4.2 2.2 6.8L15 16l-3.4 4.2 2.2-6.8L8 9.2h4.6z" fill="#e8820c" stroke="#18100a" stroke-width="1.8"/></svg>
+        </div>
+        <div class="dstar" style="bottom:105px;left:2px;animation-delay:1.4s">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2l1.5 4.6H16l-4 2.9 1.5 4.6L10 11.6 6.5 14l1.5-4.6L4 6.6h4.5z" fill="#f7d46e" stroke="#18100a" stroke-width="1.5"/></svg>
+        </div>
+        <div class="dstar" style="bottom:68px;right:30px;animation-delay:.6s">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1l1.2 3.7H13l-3.2 2.3 1.2 3.7L8 8.8 4.8 10.7 6 7 3 4.7h3.8z" fill="#e8b83a" stroke="#18100a" stroke-width="1.5"/></svg>
+        </div>
+
+        <div class="dog-blob">
+          <img src="logo.png" alt="Kimchi the Shiba Inu"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="dog-blob-fb">
+            <!-- fallback cartoon dog SVG -->
+            <svg width="255" height="255" viewBox="0 0 255 255" fill="none">
+              <path d="M76 108 Q60 62 86 52 Q98 78 92 108Z" fill="#E8A84A" stroke="#18100a" stroke-width="2.5"/>
+              <path d="M179 108 Q195 62 169 52 Q157 78 163 108Z" fill="#E8A84A" stroke="#18100a" stroke-width="2.5"/>
+              <path d="M78 103 Q66 68 86 58 Q94 75 89 103Z" fill="#c0392b"/>
+              <path d="M177 103 Q189 68 169 58 Q161 75 166 103Z" fill="#c0392b"/>
+              <ellipse cx="127" cy="152" rx="64" ry="68" fill="#F4C06B" stroke="#18100a" stroke-width="2.5"/>
+              <ellipse cx="127" cy="175" rx="33" ry="25" fill="#fff9e6" stroke="#18100a" stroke-width="2"/>
+              <ellipse cx="104" cy="146" rx="13" ry="14" fill="white" stroke="#18100a" stroke-width="2.5"/>
+              <ellipse cx="150" cy="146" rx="13" ry="14" fill="white" stroke="#18100a" stroke-width="2.5"/>
+              <circle cx="107" cy="148" r="8" fill="#18100a"/>
+              <circle cx="153" cy="148" r="8" fill="#18100a"/>
+              <circle cx="110" cy="145" r="3" fill="white"/>
+              <circle cx="156" cy="145" r="3" fill="white"/>
+              <ellipse cx="127" cy="166" rx="10" ry="7" fill="#18100a"/>
+              <path d="M113 178 Q127 192 141 178" stroke="#18100a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <ellipse cx="90" cy="168" rx="11" ry="7" fill="#e8820c" opacity=".3"/>
+              <ellipse cx="164" cy="168" rx="11" ry="7" fill="#e8820c" opacity=".3"/>
+            </svg>
+          </div>
+        </div>
+        <div class="dog-shadow"></div>
+        <div class="chip c1" data-en="Viral" data-cn="纳斯达克官犬">Viral</div>
+        <div class="chip c2" data-en="LP Burnt" data-cn="流动性已销毁">LP Burnt</div>
+        <div class="chip c3">$Dogwifgun</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track" id="tickEl"></div></div>
+
+══════════════════ ABOUT ══════════════════
+<!-- <section id="about">
+  <div class="about-ghost" aria-hidden="true">Dogwifgun</div>
+
+  <div class="about-head reveal">
+    <div class="eyebrow" data-en="Origin Story" data-cn="起源故事">Origin Story</div>
+    <h2 class="about-title">
+      <span data-en="Reclaiming" data-cn="重新夺回">Reclaiming</span><br>
+      <span class="line2" data-en="The Name." data-cn="这个名字。">The Name.</span>
+    </h2>
+  </div>
+
+  <div class="about-intro">
+    <div class="about-intro-col reveal">
+      <p data-en="Before Kimchi became a symbol of Dogecoin's new era, the name already existed on Ethereum — attached to a contract inspired by the food, not the dog. A fleeting moment in the endless cycle of tokens and trends. It came and went, leaving behind only a name." data-cn="在 Kimchi 成为 Dogecoin 新时代象征之前，这个名字已经存在于以太坊上 —— 绑定在一个以食物为灵感的合约上，而非那只狗。在代币与趋势的无尽循环中，短暂出现，转瞬即逝，只留下一个名字。">Before Kimchi became a symbol of Dogecoin's new era, the name already existed on Ethereum — attached to a contract inspired by the food, not the dog. A fleeting moment in the endless cycle of tokens and trends. It came and went, leaving behind only a name.</p>
+      <span class="big-stmt" data-en="But names don't define meaning.<br>Community does." data-cn="但名字不定义意义。<br>社区才能。">But names don't define meaning.<br>Community does.</span>
+    </div>
+    <div class="about-intro-col reveal" style="transition-delay:.1s">
+      <p data-en="When Kimchi the Shiba Inu emerged — chosen, embraced, and elevated by the Doge community — that name found its true identity. What once represented something temporary was reborn into something lasting. <strong>Something alive.</strong>" data-cn="当柴犬 Kimchi 出现 —— 被 Doge 社区选中、接纳和推崇 —— 这个名字找到了它真正的身份。曾经代表短暂的事物，重生为永久的存在。<strong>某种有生命力的东西。</strong>">When Kimchi the Shiba Inu emerged — chosen, embraced, and elevated by the Doge community — that name found its true identity. What once represented something temporary was reborn into something lasting. <strong>Something alive.</strong></p>
+      <p style="margin-top:14px" data-en="Kimchi wasn't created in a lab. She wasn't manufactured by a marketing team. She was <strong>chosen</strong> — to represent the next face of Doge, to carry forward the spirit of meme culture, to turn a recycled name into an original story." data-cn="Kimchi 不是在实验室里创造的，也不是由营销团队制造的。她是被<strong>选中</strong>的 —— 代表 Doge 的下一张面孔，传承 meme 文化的精神，将一个回收的名字变成原创故事。">Kimchi wasn't created in a lab. She wasn't manufactured by a marketing team. She was <strong>chosen</strong> — to represent the next face of Doge, to carry forward the spirit of meme culture, to turn a recycled name into an original story.</p>
+    </div>
+  </div>
+
+  <div class="about-quote reveal">
+    <div class="quote-inner">
+      <p data-en='"Her presence signals a shift — from anonymous contracts to recognizable icons. From noise to narrative. This Kimchi isn't a reference. She's the origin of something new."' data-cn='"她的出现预示着转变 —— 从匿名合约到可识别的图标。从噪音到叙事。这个 Kimchi 不是引用，她是新事物的起源。"'>"Her presence signals a shift — from anonymous contracts to recognizable icons. From noise to narrative. This Kimchi isn't a reference. She's the origin of something new."</p>
+    </div>
+  </div>
+
+  <div class="about-cards">
+    <div class="about-card reveal">
+      <div class="about-card-num">01</div>
+      <h4 data-en="Chosen by Community" data-cn="由社区选出">Chosen by Community</h4>
+      <p data-en="A living symbol of what makes Dogecoin different: community first, culture always, and identity that can't be copied." data-cn="Dogecoin 与众不同之处的活生生象征：社区第一，文化永存，身份不可复制。">A living symbol of what makes Dogecoin different: community first, culture always, and identity that can't be copied.</p>
+    </div>
+    <div class="about-card reveal" style="transition-delay:.08s">
+      <div class="about-card-num">02</div>
+      <h4 data-en="Origin of Something New" data-cn="新事物的起源">Origin of Something New</h4>
+      <p data-en="The contract may have existed before. But the meaning never did. Such rebirth. Much identity. Wow." data-cn="合约可能之前存在过，但意义从未存在。如此重生，如此身份，哇。">The contract may have existed before. But the meaning never did. Such rebirth. Much identity. Wow.</p>
+    </div>
+    <div class="about-card reveal" style="transition-delay:.16s">
+      <div class="about-card-num">03</div>
+      <h4 data-en="Nasdaq Official Dog" data-cn="纳斯达克官方犬">Nasdaq Official Dog</h4>
+      <p data-en="Chosen by the Doge community and celebrated at the Nasdaq — Kimchi is the face of the next chapter." data-cn="由 Doge 社区选出并在纳斯达克庆典亮相 —— Kimchi 是下一章节的代言面孔。">Chosen by the Doge community and celebrated at the Nasdaq — Kimchi is the face of the next chapter.</p>
+    </div>
+  </div>
+
+  <div class="about-bottom reveal">
+    <div class="wow-block">
+      <span class="wow-txt" data-en="Much identity.<br>Such rebirth. Wow." data-cn="如此身份。<br>如此重生，哇。">Much identity.<br>Such rebirth. Wow.</span>
+      <a href="https://x.com/Polymarket/status/2059407999576211749" target="_blank" class="narr-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="#18100a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-en="Read Full Narrative" data-cn="阅读完整叙事">Read Full Narrative</span>
+      </a>
+    </div>
+    <a href="https://x.com/houseofdoge/status/2023829975493673208?s=46" target="_blank" class="nasdaq-link">
+      <img src="nasdaq.png" alt="Kimchi at Nasdaq" class="nasdaq-img"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="nasdaq-ph" style="display:none">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="6" stroke="rgba(247,212,110,.2)" stroke-width="2.5"/><path d="M10 28l7-9 7 5 9-13" stroke="rgba(247,212,110,.2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="nasdaq-ph-txt">nasdaq.png<br>(4:5)</span>
+      </div>
+      <span class="nasdaq-chip" data-en="Nasdaq Official Dog — Click to view" data-cn="纳斯达克官方犬 — 点击查看">Nasdaq Official Dog — Click to view</span>
+    </a>
+  </div>
+</section> -->
+
+<!-- ══════════════════ TOKENOMICS ══════════════════ -->
+<section id="tokenomics" class="hatch">
+  <div class="toki-wrap">
+    <div class="eyebrow toki-eyebrow reveal" data-en="On-chain Facts" data-cn="链上数据">On-chain Facts</div>
+    <h2 class="toki-title reveal" data-en="Tokenomics" data-cn="代币经济">Tokenomics</h2>
+
+    <div class="ca-wrap reveal">
+      <div class="ca-left">
+        <span class="ca-lbl" data-en="Contract Address — Ethereum" data-cn="合约地址 — 以太坊">Contract Address — Ethereum</span>
+        <span class="ca-val" id="caVal">0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc</span>
+      </div>
+      <div class="ca-actions">
+        <button class="ca-copy" onclick="copyCA('ca-copy')" data-en="Copy CA" data-cn="复制合约">Copy CA</button>
+        <a href="https://etherscan.io/token/0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc" target="_blank" class="ca-view" data-en="View on Etherscan ↗" data-cn="在 Etherscan 查看 ↗">View on Etherscan ↗</a>
+      </div>
+    </div>
+
+    <div class="toki-grid">
+      <div class="tk reveal">
+        <div class="tk-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="#f7d46e" stroke-width="2"/>
+            <path d="M11 7v4l3 3" stroke="#f7d46e" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="tk-num">1B</span>
+        <span class="tk-lbl" data-en="Total Supply" data-cn="总供应量">Total Supply</span>
+      </div>
+
+      <div class="tk hi reveal" style="transition-delay:.07s">
+        <div class="tk-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2c0 0-6 5-6 9.5a6 6 0 0012 0c0-4-4.5-7.5-6-9.5z" stroke="#18100a" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="tk-num">100%</span>
+        <span class="tk-lbl" data-en="LP Burnt Forever" data-cn="流动性永久销毁">LP Burnt Forever</span>
+      </div>
+
+      <div class="tk reveal" style="transition-delay:.14s">
+        <div class="tk-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="4" y="10" width="14" height="10" rx="2.5" stroke="#f7d46e" stroke-width="2"/>
+            <path d="M7.5 10V8a3.5 3.5 0 017 0v2" stroke="#f7d46e" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="11" cy="15" r="1.8" fill="#f7d46e"/>
+          </svg>
+        </div>
+        <span class="tk-num" style="font-size:1.7rem;letter-spacing:0" data-en="RENOUNCED" data-cn="已放弃">RENOUNCED</span>
+        <span class="tk-lbl" data-en="Contract Ownership" data-cn="合约所有权">Contract Ownership</span>
+      </div>
+
+      <!-- full-width info bar -->
+      <div class="tk full reveal" style="transition-delay:.21s">
+        <div>
+          <span class="tk-lbl" style="margin-bottom:6px" data-en="Token" data-cn="代币">Token</span>
+          <span class="tk-num" style="font-size:2.6rem">$Dogwifgun</span>
+        </div>
+        <div class="tk-stats">
+          <div class="tk-stat">
+            <span class="tk-lbl" data-en="Network" data-cn="网络">Network</span>
+            <span class="tk-num">ETH</span>
+          </div>
+          <div class="tk-stat">
+            <span class="tk-lbl" data-en="Buy Tax" data-cn="买入税">Buy Tax</span>
+            <span class="tk-num">0%</span>
+          </div>
+          <div class="tk-stat">
+            <span class="tk-lbl" data-en="Sell Tax" data-cn="卖出税">Sell Tax</span>
+            <span class="tk-num">0%</span>
+          </div>
+          <div class="tk-stat">
+            <span class="tk-lbl" data-en="Owner" data-cn="拥有者">Owner</span>
+            <span class="tk-num">NONE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ HOW TO BUY ══════════════════ -->
+<section id="howtobuy">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="eyebrow htb-eyebrow reveal" data-en="Step by Step" data-cn="逐步指南">Step by Step</div>
+    <h2 class="htb-title reveal" data-en="How to Buy" data-cn="如何购买">How to Buy</h2>
+    <div class="htb-grid">
+      <div class="htb-step reveal">
+        <div class="htb-num">1</div>
+        <img src="metamask.png" alt="MetaMask" class="htb-img"
+          onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22%3E%3Crect width=%2260%22 height=%2260%22 rx=%2214%22 fill=%22%23F6851B%22/%3E%3Cpath d=%22M30 12l14 8-5 10 5 5-14 11-14-11 5-5-5-10z%22 fill=%22white%22 opacity=%22.45%22/%3E%3C/svg%3E'">
+        <h3 data-en="Get a Wallet" data-cn="获取钱包">Get a Wallet</h3>
+        <p data-en="Download MetaMask or any EVM wallet. Keep your seed phrase safe — never share it with anyone." data-cn="下载 MetaMask 或任何 EVM 钱包。妥善保管助记词 —— 切勿与任何人分享。">Download MetaMask or any EVM wallet. Keep your seed phrase safe — never share it with anyone.</p>
+      </div>
+      <div class="htb-step reveal" style="transition-delay:.08s">
+        <div class="htb-num">2</div>
+        <img src="eth.png" alt="Ethereum" class="htb-img"
+          onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22%3E%3Crect width=%2260%22 height=%2260%22 rx=%2214%22 fill=%22%23627EEA%22/%3E%3Cpolygon points=%2230,10 30,34 44,26%22 fill=%22white%22 opacity=%22.9%22/%3E%3Cpolygon points=%2230,10 16,26 30,34%22 fill=%22white%22 opacity=%22.6%22/%3E%3Cpolygon points=%2230,37 30,50 44,29%22 fill=%22white%22 opacity=%22.9%22/%3E%3Cpolygon points=%2230,37 16,29 30,50%22 fill=%22white%22 opacity=%22.6%22/%3E%3C/svg%3E'">
+        <h3 data-en="Get ETH" data-cn="获取 ETH">Get ETH</h3>
+        <p data-en="Buy ETH from Coinbase, Binance or any exchange. Transfer to your wallet to cover gas + purchase." data-cn="从 Coinbase、币安或任何交易所购买 ETH，转入钱包以支付 Gas 费和购买费用。">Buy ETH from Coinbase, Binance or any exchange. Transfer to your wallet to cover gas + purchase.</p>
+      </div>
+      <div class="htb-step reveal" style="transition-delay:.16s">
+        <div class="htb-num">3</div>
+        <img src="uniswap.png" alt="Uniswap" class="htb-img"
+          onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22%3E%3Crect width=%2260%22 height=%2260%22 rx=%2214%22 fill=%22%23FF007A%22/%3E%3Ccircle cx=%2230%22 cy=%2226%22 r=%2210%22 fill=%22white%22 opacity=%22.9%22/%3E%3Cellipse cx=%2230%22 cy=%2244%22 rx=%228%22 ry=%225%22 fill=%22white%22 opacity=%22.6%22/%3E%3C/svg%3E'">
+        <h3 data-en="Go to Uniswap" data-cn="前往 Uniswap">Go to Uniswap</h3>
+        <p data-en="Head to app.uniswap.org and connect your wallet on Ethereum mainnet." data-cn="前往 <a href='https://app.uniswap.org' target='_blank'>app.uniswap.org</a>，在以太坊主网上连接钱包。">Head to <a href="https://app.uniswap.org" target="_blank">app.uniswap.org</a> and connect your wallet on Ethereum mainnet.</p>
+      </div>
+      <div class="htb-step reveal" style="transition-delay:.24s">
+        <div class="htb-num">4</div>
+        <img src="logo.png" alt="$Dogwifgun" class="htb-img"
+          onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22%3E%3Crect width=%2260%22 height=%2260%22 rx=%2214%22 fill=%22%23f7d46e%22/%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%2213%22 fill=%22%2318100a%22/%3E%3C/svg%3E'">
+        <h3 data-en="Swap for $Dogwifgun" data-cn="兑换 $Dogwifgun">Swap for $Dogwifgun</h3>
+        <p data-en="Paste the CA, set slippage 1–3% and swap ETH for $Dogwifgun. Welcome to the pack!" data-cn="粘贴合约地址，设置 1–3% 滑点，将 ETH 兑换为 $KIMCHI。欢迎加入！">Paste the CA, set slippage 1–3% and swap ETH for $Dogwifgun. Welcome to the pack!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CHART ══════════════════ -->
+<section id="chart" class="hatch">
+  <div class="chart-wrap">
+    <div class="eyebrow chart-eyebrow reveal" data-en="Live Data" data-cn="实时数据">Live Data</div>
+    <h2 class="chart-title reveal" data-en="Trade &amp; Track" data-cn="交易与追踪">Trade &amp; Track</h2>
+
+    <!-- DexScreener full width -->
+    <div class="dex-panel reveal">
+      <div class="dex-top">
+        <span class="dex-top-name">DexScreener — $Dogwifgun / ETH</span>
+        <a href="https://dexscreener.com/ethereum/0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc" target="_blank" class="dex-top-link">
+          <span data-en="Open full screen" data-cn="全屏打开">Open full screen</span>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M6.5 2.5l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <iframe id="dex-frame"
+        src="https://dexscreener.com/ethereum/0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc?embed=1&loadChartSettings=0&chartLeftToolbar=0&chartTheme=dark&theme=dark&chartStyle=1&chartType=marketCap&interval=1"
+        title="DexScreener Chart" allow="clipboard-write" loading="lazy">
+      </iframe>
+    </div>
+
+    <!-- Uniswap row -->
+    <div class="uni-row reveal">
+      <div class="uni-info">
+        <h3 data-en="Swap on Uniswap" data-cn="在 Uniswap 兑换">Swap on<br>Uniswap</h3>
+        <p data-en="Buy $Dogwifgun instantly on the most trusted DEX on Ethereum. No registration. No KYC. Just connect your wallet and swap." data-cn="在以太坊最受信赖的 DEX 上即时购买 $KIMCHI。无需注册，无需 KYC，连接钱包即可兑换。">Buy $Dogwifgun instantly on the most trusted DEX on Ethereum. No registration. No KYC. Just connect your wallet and swap.</p>
+
+        <!-- Copyable CA inside uniswap section -->
+        <div class="uni-ca">
+          <span class="uni-ca-val">0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc</span>
+          <button class="uni-ca-copy" onclick="copyCA('uni-ca-copy')" data-en="Copy CA" data-cn="复制合约">Copy CA</button>
+        </div>
+
+        <a href="https://app.uniswap.org/swap?outputCurrency=0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc&chain=ethereum" target="_blank" class="btn-dark" style="font-size:1.1rem;padding:13px 28px" data-en="Open Uniswap" data-cn="打开 Uniswap">Open Uniswap</a>
+      </div>
+
+      <div class="uni-frame-wrap">
+        <iframe
+          src="https://app.uniswap.org/#/swap?outputCurrency=0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc&chain=ethereum&theme=dark"
+          title="Uniswap Swap"
+          allow="clipboard-write"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MEMES ══════════════════ -->
+<section id="memes">
+  <div class="memes-wrap">
+    <div class="eyebrow memes-eyebrow reveal" data-en="Community" data-cn="社区">Community</div>
+    <h2 class="memes-title reveal" data-en="Meme Gallery" data-cn="表情包画廊">Meme Gallery</h2>
+    <div class="memes-grid">
+      <div class="meme-card reveal">
+        <img src="meme1.png" alt="Meme 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="meme-ph" style="display:none"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="4" y="4" width="34" height="34" rx="7" stroke="rgba(247,212,110,.18)" stroke-width="2.5"/><path d="M11 29l6-8 6 5 8-11" stroke="rgba(247,212,110,.18)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>MEME 01</span></div>
+      </div>
+      <div class="meme-card reveal" style="transition-delay:.08s">
+        <img src="meme2.png" alt="Meme 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="meme-ph" style="display:none"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="4" y="4" width="34" height="34" rx="7" stroke="rgba(247,212,110,.18)" stroke-width="2.5"/><path d="M11 29l6-8 6 5 8-11" stroke="rgba(247,212,110,.18)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>MEME 02</span></div>
+      </div>
+      <div class="meme-card reveal" style="transition-delay:.16s">
+        <img src="meme3.png" alt="Meme 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="meme-ph" style="display:none"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="4" y="4" width="34" height="34" rx="7" stroke="rgba(247,212,110,.18)" stroke-width="2.5"/><path d="M11 29l6-8 6 5 8-11" stroke="rgba(247,212,110,.18)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>MEME 03</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CONTACT ══════════════════ -->
+<section id="contact" class="hatch">
+  <div class="contact-wrap">
+    <div class="eyebrow contact-eyebrow reveal" data-en="Social Links" data-cn="社交链接">Social Links</div>
+    <h2 class="contact-title reveal" data-en="Join the Pack" data-cn="加入团队">Join the Pack</h2>
+    <p class="contact-sub reveal" data-en="Kimchi wasn't manufactured. She was chosen. Now it's your turn." data-cn="Kimchi 不是制造出来的，她是被选中的。现在轮到你了。">Kimchi wasn't manufactured. She was chosen. Now it's your turn.</p>
+    <div class="soc-row">
+      <a href="https://x.com/Dogwifgun_eth" target="_blank" class="soc-card reveal">
+        <div class="soc-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M14 3h3L10.5 9.8 18 15h-5.4l-3.6-4.7L4.6 15H2l6.3-7.2L2 3h5.5l3.2 4.2z" fill="#f7d46e"/></svg></div>
+        <span class="soc-name">Twitter</span>
+        <span class="soc-hdl">@kimchi_og_eth</span>
+      </a>
+      <a href="https://x.com/i" target="_blank" class="soc-card reveal" style="transition-delay:.06s">
+        <div class="soc-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="7" r="3" stroke="#f7d46e" stroke-width="1.8"/><path d="M2.5 16c0-3.6 3-6.5 6.5-6.5s6.5 2.9 6.5 6.5" stroke="#f7d46e" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <span class="soc-name" data-en="Community" data-cn="社区">Community</span>
+        <span class="soc-hdl" data-en="X Community" data-cn="X 社区">X Community</span>
+      </a>
+      <a href="https://t.me/Dogwifgun_eth" target="_blank" class="soc-card reveal" style="transition-delay:.12s">
+        <div class="soc-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M15.5 2.5L7 10.5M15.5 2.5l-11 4 4 1.8M15.5 2.5l-3.5 12-3.5-4.5M9 17.5l2 2.5" stroke="#f7d46e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="soc-name">Telegram</span>
+        <span class="soc-hdl">KIMCHIETHCTO</span>
+      </a>
+      <a href="https://x.com/Polymarket/status/2059407999576211749" target="_blank" class="soc-card reveal" style="transition-delay:.18s">
+        <div class="soc-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="2.5" width="13" height="13" rx="2.5" stroke="#f7d46e" stroke-width="1.8"/><path d="M5.5 9h7M5.5 6h4.5M5.5 12h5.5" stroke="#f7d46e" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <span class="soc-name" data-en="Narrative" data-cn="叙事">Narrative</span>
+        <span class="soc-hdl" data-en="Origin Story" data-cn="起源故事">Origin Story</span>
+      </a>
+      <a href="https://dexscreener.com/ethereum/0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc" target="_blank" class="soc-card reveal" style="transition-delay:.24s">
+        <div class="soc-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2.5 14l3.5-5 4 3 5.5-8" stroke="#f7d46e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="soc-name">DexScreener</span>
+        <span class="soc-hdl" data-en="Live Chart" data-cn="实时图表">Live Chart</span>
+      </a>
+    </div>
+    <div class="contact-wow" data-en="MUCH WOW. SUCH Dogwifgun." data-cn="非常哇塞。如此 KIMCHI。">MUCH WOW. SUCH Dogwifgun.</div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <div class="foot-top">
+    <a href="#hero" class="foot-logo">
+      <img src="logo.png" alt="Kimchi" onerror="this.style.display='none'">
+      <span>Dogwifgun</span>
+    </a>
+    <div class="foot-links">
+      <a href="#about" data-en="About" data-cn="关于">About</a>
+      <a href="#tokenomics" data-en="Tokenomics" data-cn="代币经济">Tokenomics</a>
+      <a href="#howtobuy" data-en="How to Buy" data-cn="如何购买">How to Buy</a>
+      <a href="#chart" data-en="Chart" data-cn="图表">Chart</a>
+      <a href="#memes" data-en="Memes" data-cn="表情包">Memes</a>
+      <a href="https://x.com/Dogwifgun_eth" target="_blank">Twitter</a>
+      <a href="https://t.me/Dogwifgun_eth" target="_blank">Telegram</a>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <div>
+      <div class="foot-ca">CA: 0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc</div>
+      <div class="foot-disc" data-en="$Dogwifgun is a meme token with no intrinsic value or expectation of financial return. Not financial advice. Crypto assets are highly volatile — always DYOR before investing." data-cn="$Dogwifgun 是一种无内在价值或预期财务回报的 meme 代币。非投资建议。加密资产波动性极高 —— 投资前请自行研究。">$Dogwifgun is a meme token with no intrinsic value or expectation of financial return. Not financial advice. Crypto assets are highly volatile — always DYOR before investing.</div>
+    </div>
+    <div class="foot-copy" data-en="© 2026 Dogwifgun<br>Built by the Community" data-cn="© 2026 Dogwifgun<br>由社区构建">© 2026 Dogwifgun<br>Built by the Community</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" data-en="CA Copied!" data-cn="合约已复制！">CA Copied!</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX+'px';
+  cur.style.top  = e.clientY+'px';
+});
+document.querySelectorAll('a,button,.meme-card,.soc-card,.htb-step,.tk,.about-card,.nasdaq-link').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('h'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('h'));
+});
+
+/* ─── PAW RAIN ─── */
+const rain = document.getElementById('paw-rain');
+const opacities = [.06,.07,.05,.08,.04];
+for(let i=0;i<24;i++){
+  const d = document.createElement('div');
+  d.className='paw-drop';
+  const img = document.createElement('img');
+  img.src='paw.png';
+  img.alt='';
+  const op = opacities[i%opacities.length];
+  img.style.opacity=op;
+  img.style.filter=`grayscale(1) opacity(${op})`;
+  img.onerror=function(){
+    this.remove();
+    const s=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    s.setAttribute('width','38');s.setAttribute('height','38');s.setAttribute('viewBox','0 0 38 38');
+    s.style.opacity=op;
+    s.innerHTML='<ellipse cx="19" cy="26" rx="8.5" ry="7.5" fill="#18100a"/><ellipse cx="10" cy="17" rx="4" ry="4.8" fill="#18100a"/><ellipse cx="28" cy="17" rx="4" ry="4.8" fill="#18100a"/><ellipse cx="14.5" cy="12" rx="3.5" ry="4.2" fill="#18100a"/><ellipse cx="23.5" cy="12" rx="3.5" ry="4.2" fill="#18100a"/>';
+    d.appendChild(s);
+  };
+  d.appendChild(img);
+  d.style.left=(Math.random()*102)+'vw';
+  d.style.animationDuration=(11+Math.random()*20)+'s';
+  d.style.animationDelay=(Math.random()*24)+'s';
+  const scale=0.5+Math.random()*.9;
+  d.style.transform=`scale(${scale})`;
+  rain.appendChild(d);
+}
+
+/* ─── TICKER — built by buildTicker() via setLang init ─── */
+
+/* ─── SCROLL REVEAL ─── */
+document.querySelectorAll('.reveal').forEach(el=>{
+  new IntersectionObserver(([e])=>{if(e.isIntersecting)e.target.classList.add('in');},{threshold:.07}).observe(el);
+});
+
+/* ─── COPY CA (shared fn) ─── */
+const CA='0x64dbfb9cbc2b442852b3eae146a497e7b0559bdc';
+function copyCA(btnId){
+  navigator.clipboard.writeText(CA).then(()=>{
+    const t=document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2200);
+    /* brief button feedback */
+    const b=document.querySelector('.'+btnId);
+    if(b){const orig=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=orig,1800);}
+  });
+}
+
+/* ─── NAV ACTIVE + SCROLL SHADOW ─── */
+const secs=[...document.querySelectorAll('section[id]')];
+const navAs=[...document.querySelectorAll('#nav .nav-links a:not(.nav-cta)')];
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY;
+  document.getElementById('nav').classList.toggle('scrolled',sy>10);
+  let cur2='';
+  secs.forEach(s=>{if(sy>=s.offsetTop-130)cur2=s.id;});
+  navAs.forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur2);
+  });
+},{passive:true});
+
+/* ─── LANGUAGE SWITCHER ─── */
+let currentLang = localStorage.getItem('kimchi_lang') || 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('kimchi_lang', lang);
+
+  // toggle body class for font overrides
+  document.body.classList.toggle('lang-cn', lang === 'cn');
+
+  // swap all [data-en] / [data-cn] elements
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const txt = lang === 'cn' ? el.getAttribute('data-cn') : el.getAttribute('data-en');
+    if (txt !== null) el.innerHTML = txt;
+  });
+
+  // toggle button states
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+  document.getElementById('btnCN').classList.toggle('active', lang === 'cn');
+
+  // update toast text directly
+  const toast = document.getElementById('toast');
+  toast.textContent = lang === 'cn' ? '合约已复制！' : 'CA Copied!';
+
+  // update ticker
+  buildTicker(lang);
+
+  // update page title
+  document.title = lang === 'cn' ? 'Dogwifgun — Doge 官方犬' : 'Dogwifgun — The Face of Doge';
+}
+
+function buildTicker(lang) {
+  const tickEN = ['$Dogwifgun','LP Burnt','Renounced','Viral','0% Tax','Community Chosen','1B Supply','The Face of Doge','Such Wow','Much Rebirth','On Ethereum'];
+  const tickCN = ['$Dogwifgun','流动性已销毁','合约已放弃','纳斯达克官犬','0%税率','社区选择','10万亿供应','Doge的面孔','如此惊喜','如此重生','以太坊上'];
+  const items = lang === 'cn' ? tickCN : tickEN;
+  const te = document.getElementById('tickEl');
+  te.innerHTML = (items.concat(items)).map(t =>
+    `<span class="tick-item"><span class="tick-dot"></span>${t}</span>`
+  ).join('');
+}
+
+// Init on load
+(function init() {
+  if (currentLang === 'cn') setLang('cn');
+  else buildTicker('en');
+})();
+const burger=document.getElementById('burger');
+const mobileMenu=document.getElementById('mobile-menu');
+burger.addEventListener('click',()=>{
+  burger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMenu(){
+  burger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+</script>
+</body>
+</html>
